@@ -66,7 +66,7 @@ cs-desk/
 
 ### 🔹 1. Clone Repository
 
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/Padmalochan-812/online-teaching-app-CS-DESK.git
 cd cs-desk
 
 ---
