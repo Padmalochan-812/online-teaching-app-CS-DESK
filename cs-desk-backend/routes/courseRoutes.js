@@ -6,8 +6,8 @@ const {
     deleteCourse
 } = require("../controllers/courseController");
 
-const Protect = require("../middleware/authMiddleware");
-const isAdmin = require("../middleware/adminMiddlewere");
+const protect = require("../middleware/authMiddleware");
+const isAdmin = require("../middleware/adminMiddleware");
 
 router.post("/", protect,isAdmin, createCourse);
 router.get("/", getCourse);
