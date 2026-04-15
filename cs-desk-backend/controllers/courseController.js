@@ -8,9 +8,15 @@ exports.createCourse = async (req, res) => {
 
 //Read All Course
 
-exports.getCourse = async (req, res) => {
-    const Courses = await Course.find();
-    res.json(courses);
+exports.getCourses = async (req, res) => {
+  try {
+    const courses = await Course.find(); // ✅ correct variable
+
+    res.json(courses); // ✅ same name
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
 
 //Update Course
