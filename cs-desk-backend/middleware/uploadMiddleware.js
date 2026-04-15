@@ -1,29 +1,34 @@
 const multer = require("multer");
 const path = require("path");
 
-// Set up storage engine
+// Storage
 const storage = multer.diskStorage({
-    destination: (req, file,cd) => {
-        cd(null, "uploads/");
-
-    },
-    filename: (req, file, cd) => {
-        cd(null, Date.now() + path.extname(file.originalname));
-    },
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
 });
 
-// File filter
-const fileFilter = (req, file, cd) => {
-    if (file.mimetype === "application/pdf") {
-        cd(null, true);
-    } else {
-        cd(new Error("Only PDF files are allowed"), false);
-    }
+// File filter (PDF + PPT allowed)
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = [
+    "application/pdf",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only PDF and PPT files are allowed"), false);
+  }
 };
 
 const upload = multer({
-    storage,
-    fileFilter,
+  storage,
+  fileFilter
 });
 
 module.exports = upload;
