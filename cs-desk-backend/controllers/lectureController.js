@@ -1,27 +1,68 @@
 const Lecture = require("../models/Lecture");
 
-// ADD LECTURE
+// ✅ ADD LECTURE
 exports.addLecture = async (req, res) => {
-  const lecture = await Lecture.create({
-    ...req.body,
-    pdf: req.files?.pdf?.[0]?.filename,
-    ppt: req.files?.ppt?.[0]?.filename
-  });
+  try {
+    console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
 
-  res.json(lecture);
+    const { title, videoUrl, course } = req.body;
+
+    // ✅ Validate required fields
+    if (!title || !videoUrl || !course) {
+      return res.status(400).json({
+        message: "Title, videoUrl and course are required"
+      });
+    }
+
+    const lecture = await Lecture.create({
+      title,
+      videoUrl,
+      course,
+      pdf: req.files?.pdf?.[0]?.filename || "",
+      ppt: req.files?.ppt?.[0]?.filename || ""
+    });
+
+    res.status(201).json(lecture);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: error.message
+    });
+  }
 };
 
-// GET LECTURES BY COURSE
+// ✅ GET LECTURES BY COURSE
 exports.getLectures = async (req, res) => {
-  const lectures = await Lecture.find({
-    course: req.params.courseId
-  });
+  try {
+    const lectures = await Lecture.find({
+      course: req.params.courseId
+    }).sort({ createdAt: 1 });
 
-  res.json(lectures);
+    res.json(lectures);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// DELETE
+// ✅ DELETE LECTURE
 exports.deleteLecture = async (req, res) => {
-  await Lecture.findByIdAndDelete(req.params.id);
-  res.json({ message: "Lecture deleted" });
+  try {
+    const lecture = await Lecture.findById(req.params.id);
+
+    if (!lecture) {
+      return res.status(404).json({
+        message: "Lecture not found"
+      });
+    }
+
+    await lecture.deleteOne();
+
+    res.json({ message: "Lecture deleted" });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
