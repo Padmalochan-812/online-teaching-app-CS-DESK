@@ -21,6 +21,8 @@ app.use(cors({
 // Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/course", require("./routes/courseRoutes"));
+app.use("/api/lecture", require("./routes/lectureRoutes")); // ✅ ADD THIS
+app.use("/api/quiz", require("./routes/quizRoutes"));       // ✅ ADD THIS
 
 // Static files
 const path = require("path");
